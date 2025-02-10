@@ -1,12 +1,9 @@
-import { timeStamp } from 'console';
 import { Schema, model, Document } from 'mongoose';
 
 export interface TasksDocument extends Document {
   title: string;
   description?: string;
   status: 'ToDo' | 'InProgress' | 'Done';
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 const tasksSchema = new Schema<TasksDocument>(

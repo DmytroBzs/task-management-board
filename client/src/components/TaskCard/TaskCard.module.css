@@ -1,0 +1,43 @@
+.card {
+  display: flex;
+  height: 150px;
+  align-items: center;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #a1b2b2, #4e7070);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  position: relative; /* Додаємо позиціонування для кнопки */
+}
+
+.infoContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.textContainer {
+  flex: 1;
+  padding: 0 15px;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.deleteButton {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.deleteButton:hover {
+  opacity: 0.7;
+}

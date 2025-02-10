@@ -42,7 +42,7 @@ export const patchTask = async (
 export const deleteTask = async (
   taskId: string
 ): Promise<TasksDocument | null> => {
-  const task = TasksCollection.findOneAndDelete({
+  const task = await TasksCollection.findOneAndDelete({
     _id: taskId,
   });
   return task;
