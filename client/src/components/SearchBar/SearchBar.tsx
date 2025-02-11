@@ -1,15 +1,16 @@
-import { Formik, Form, Field } from "formik";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { fetchTaskById } from "../../redux/tasks/operations";
-import css from "./SearchBar.module.css";
+import { Formik, Form, Field } from 'formik';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store';
+import { fetchTaskById } from '../../redux/tasks/operations';
+import css from './SearchBar.module.css';
+import React from 'react';
 
-const SearchBar = () => {
+const SearchBar: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = (
     { searchInput }: { searchInput: string },
-    { resetForm }: { resetForm: () => void },
+    { resetForm }: { resetForm: () => void }
   ) => {
     if (!searchInput.trim()) return;
     dispatch(fetchTaskById(searchInput));
@@ -17,7 +18,7 @@ const SearchBar = () => {
   };
 
   return (
-    <Formik initialValues={{ searchInput: "" }} onSubmit={handleSubmit}>
+    <Formik initialValues={{ searchInput: '' }} onSubmit={handleSubmit}>
       <Form className={css.form}>
         <Field
           className={css.input}
