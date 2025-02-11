@@ -1,11 +1,11 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   fetchTaskById,
   fetchTasks,
   addTask,
   updateTask,
   deleteTask,
-} from './operations';
+} from "./operations";
 
 interface Task {
   task: { _id: string; title: string; description: string; status: string };
@@ -39,14 +39,14 @@ const handlePending = (state: TasksState) => {
 const handleRejected = (state: TasksState, action: PayloadAction<unknown>) => {
   state.loading = false;
   state.error =
-    typeof action.payload === 'string' ? action.payload : 'An error occurred';
+    typeof action.payload === "string" ? action.payload : "An error occurred";
 };
 
 const tasksSlice = createSlice({
-  name: 'tasks',
+  name: "tasks",
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchTasks.pending, handlePending)
       .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
@@ -61,7 +61,7 @@ const tasksSlice = createSlice({
         (state, action: PayloadAction<Task>) => {
           state.loading = false;
           state.foundTask = action.payload;
-        }
+        },
       )
       .addCase(fetchTaskById.rejected, handleRejected)
       .addCase(addTask.pending, handlePending)
@@ -74,7 +74,7 @@ const tasksSlice = createSlice({
       .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
         state.loading = false;
         const index = state.tasks.findIndex(
-          task => task._id === action.payload._id
+          (task) => task._id === action.payload._id,
         );
         if (index !== -1) {
           state.tasks[index] = action.payload;
@@ -84,7 +84,7 @@ const tasksSlice = createSlice({
       .addCase(deleteTask.pending, handlePending)
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.loading = false;
-        state.tasks = state.tasks.filter(task => task._id !== action.payload);
+        state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       })
       .addCase(deleteTask.rejected, handleRejected);
   },

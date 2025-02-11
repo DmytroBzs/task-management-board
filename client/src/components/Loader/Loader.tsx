@@ -1,6 +1,6 @@
-import React from 'react';
-import RingLoader from 'react-spinners/RingLoader';
-import css from './Loader.module.css';
+import React from "react";
+import RingLoader from "react-spinners/RingLoader";
+import css from "./Loader.module.css";
 
 const Loader: React.FC = () => {
   return (

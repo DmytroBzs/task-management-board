@@ -1,8 +1,8 @@
-import React, { lazy } from 'react';
-import css from './Board.module.css';
+import React, { lazy } from "react";
+import css from "./Board.module.css";
 
-const Column = lazy(() => import('../Column/Column'));
-const TaskList = lazy(() => import('../TaskList/TaskList'));
+const Column = lazy(() => import("../Column/Column"));
+const TaskList = lazy(() => import("../TaskList/TaskList"));
 
 interface BoardProps {
   tasks: {
@@ -14,9 +14,9 @@ interface BoardProps {
 }
 
 const Board: React.FC<BoardProps> = ({ tasks }) => {
-  const toDoTasks = tasks.filter(task => task.status === 'ToDo');
-  const inProgressTasks = tasks.filter(task => task.status === 'InProgress');
-  const doneTasks = tasks.filter(task => task.status === 'Done');
+  const toDoTasks = tasks.filter((task) => task.status === "ToDo");
+  const inProgressTasks = tasks.filter((task) => task.status === "InProgress");
+  const doneTasks = tasks.filter((task) => task.status === "Done");
   return (
     <div className={css.container}>
       <Column title="To Do">

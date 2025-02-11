@@ -1,5 +1,5 @@
-import React from 'react';
-import css from './Column.module.css';
+import React from "react";
+import css from "./Column.module.css";
 
 interface ColumnProps {
   title: string;

@@ -1,15 +1,15 @@
-import { useDispatch } from 'react-redux';
-import { lazy, Suspense, useEffect } from 'react';
-import { fetchTasks } from './redux/tasks/operations';
-import { AppDispatch } from './redux/store';
-import { useTasks } from './hooks/useTasks';
+import { useDispatch } from "react-redux";
+import { lazy, Suspense, useEffect } from "react";
+import { fetchTasks } from "./redux/tasks/operations";
+import { AppDispatch } from "./redux/store";
+import { useTasks } from "./hooks/useTasks";
 
-const SearchBar = lazy(() => import('./components/SearchBar/SearchBar'));
-const Title = lazy(() => import('./components/TItle/Title'));
-const Loader = lazy(() => import('./components/Loader/Loader'));
-const Board = lazy(() => import('./components/Board/Board'));
+const SearchBar = lazy(() => import("./components/SearchBar/SearchBar"));
+const Title = lazy(() => import("./components/TItle/Title"));
+const Loader = lazy(() => import("./components/Loader/Loader"));
+const Board = lazy(() => import("./components/Board/Board"));
 const AddTaskButton = lazy(
-  () => import('./components/AddTaskButton/AddTaskButton')
+  () => import("./components/AddTaskButton/AddTaskButton"),
 );
 
 const App: React.FC = () => {

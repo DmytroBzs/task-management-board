@@ -1,10 +1,10 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import {
   selectTasks,
   selectLoading,
   selectError,
   selectFoundTask,
-} from '../redux/tasks/selectors';
+} from "../redux/tasks/selectors";
 
 export const useTasks = () => {
   const tasks = useSelector(selectTasks);

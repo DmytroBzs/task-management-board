@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Modal from 'react-modal';
-import css from './AddTaskButton.module.css';
-import { addTask } from '../../redux/tasks/operations';
-import { AppDispatch } from '../../redux/store';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import Modal from "react-modal";
+import css from "./AddTaskButton.module.css";
+import { addTask } from "../../redux/tasks/operations";
+import { AppDispatch } from "../../redux/store";
 
-Modal.setAppElement('#root');
+Modal.setAppElement("#root");
 
 const AddTaskButton: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
-    title: '',
-    description: '',
-    status: 'ToDo',
+    title: "",
+    description: "",
+    status: "ToDo",
   });
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setNewTask({ title: '', description: '', status: 'ToDo' });
+    setNewTask({ title: "", description: "", status: "ToDo" });
   };
 
   const handleAddTask = async () => {
@@ -26,11 +26,11 @@ const AddTaskButton: React.FC = () => {
       try {
         const action = await dispatch(addTask(newTask));
 
-        if (action.meta.requestStatus === 'fulfilled') {
+        if (action.meta.requestStatus === "fulfilled") {
           handleModalClose();
         }
       } catch (error) {
-        console.error('Failed to add task:', error);
+        console.error("Failed to add task:", error);
       }
     }
   };
@@ -58,13 +58,13 @@ const AddTaskButton: React.FC = () => {
             type="text"
             placeholder="Task title"
             value={newTask.title}
-            onChange={e => setNewTask({ ...newTask, title: e.target.value })}
+            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
           />
           <textarea
             className={css.textarea}
             placeholder="Task description"
             value={newTask.description}
-            onChange={e =>
+            onChange={(e) =>
               setNewTask({ ...newTask, description: e.target.value })
             }
           />

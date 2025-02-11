@@ -1,6 +1,6 @@
-import React, { lazy } from 'react';
+import React, { lazy } from "react";
 
-const TaskCard = lazy(() => import('../TaskCard/TaskCard'));
+const TaskCard = lazy(() => import("../TaskCard/TaskCard"));
 interface Task {
   _id: string;
   title: string;
@@ -15,7 +15,7 @@ interface TaskListProps {
 const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
   return (
     <ul>
-      {tasks.map(task => (
+      {tasks.map((task) => (
         <li key={task._id}>
           <TaskCard task={task} />
         </li>
