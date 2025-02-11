@@ -19,11 +19,7 @@ export const getTasksController = async (req: Request, res: Response) => {
   });
 };
 
-export const getTaskByIdController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getTaskByIdController = async (req: Request, res: Response) => {
   const { taskId } = req.params;
   const task = await getTaskById(taskId);
 
