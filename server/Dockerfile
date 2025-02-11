@@ -1,13 +1,12 @@
-
 FROM node:20
 
 WORKDIR /app
 
-COPY server/package*.json ./
+COPY package*.json ./
 
 RUN npm install
 
-COPY server/ ./
+COPY . .
 
 RUN npm install -g ts-node
 
