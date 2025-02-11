@@ -1,6 +1,6 @@
-import createHttpError from 'http-errors';
-import { Request, Response, NextFunction } from 'express';
-import { ObjectSchema, ValidationError } from 'joi';
+import createHttpError from "http-errors";
+import { Request, Response, NextFunction } from "express";
+import { ObjectSchema, ValidationError } from "joi";
 
 export const validateBody =
   (schema: ObjectSchema) =>
@@ -12,7 +12,7 @@ export const validateBody =
       next();
     } catch (err) {
       if (err instanceof ValidationError) {
-        const error = createHttpError(400, 'Bad Request', {
+        const error = createHttpError(400, "Bad Request", {
           errors: err.details,
         });
         next(error);

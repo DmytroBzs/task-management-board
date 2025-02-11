@@ -1,5 +1,5 @@
-import { FilterQuery, UpdateQuery, QueryOptions } from 'mongoose';
-import { TasksCollection, TasksDocument } from '../db/models/tasks';
+import { FilterQuery, UpdateQuery, QueryOptions } from "mongoose";
+import { TasksCollection, TasksDocument } from "../db/models/tasks";
 
 export const getAllTasks = async (): Promise<TasksDocument[]> => {
   const tasks = TasksCollection.find();
@@ -7,14 +7,14 @@ export const getAllTasks = async (): Promise<TasksDocument[]> => {
 };
 
 export const getTaskById = async (
-  taskId: string
+  taskId: string,
 ): Promise<TasksDocument | null> => {
   const task = TasksCollection.findById(taskId);
   return task;
 };
 
 export const createTask = async (
-  payload: Partial<TasksDocument>
+  payload: Partial<TasksDocument>,
 ): Promise<TasksDocument> => {
   const task = TasksCollection.create(payload);
   return task;
@@ -23,12 +23,12 @@ export const createTask = async (
 export const patchTask = async (
   taskId: string,
   payload: UpdateQuery<TasksDocument>,
-  options: QueryOptions = {}
+  options: QueryOptions = {},
 ): Promise<{ task: TasksDocument; isNew: boolean } | null> => {
   const rawResult = await TasksCollection.findOneAndUpdate(
     { _id: taskId } as FilterQuery<TasksDocument>,
     payload,
-    { new: true, upsert: true, ...options }
+    { new: true, upsert: true, ...options },
   );
 
   if (!rawResult) return null;
@@ -40,7 +40,7 @@ export const patchTask = async (
 };
 
 export const deleteTask = async (
-  taskId: string
+  taskId: string,
 ): Promise<TasksDocument | null> => {
   const task = await TasksCollection.findOneAndDelete({
     _id: taskId,

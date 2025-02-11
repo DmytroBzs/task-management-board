@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 type Controller = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => Promise<void>;
 
 export const ctrlWrapper = (controller: Controller) => {
