@@ -1,16 +1,23 @@
-# Базовий образ Node.js
-FROM node:16 AS build
+# Встановлюємо базовий образ Node.js
+FROM node:20
 
+# Встановлюємо робочу директорію
 WORKDIR /app
 
+# Копіюємо package.json та package-lock.json
 COPY server/package*.json ./
 
+# Встановлюємо залежності
 RUN npm install
 
-COPY server/ .
+# Копіюємо всі файли проекту в контейнер
+COPY server/ ./
 
-RUN npm run dev
+# Встановлюємо глобально ts-node для виконання TypeScript без попередньої компіляції
+RUN npm install -g ts-node
 
+# Відкриваємо порт
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# Запускаємо сервер через ts-node (для TypeScript)
+CMD ["ts-node", "index.ts"]
