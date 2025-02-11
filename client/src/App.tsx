@@ -8,6 +8,9 @@ const SearchBar = lazy(() => import('./components/SearchBar/SearchBar'));
 const Title = lazy(() => import('./components/TItle/Title'));
 const Loader = lazy(() => import('./components/Loader/Loader'));
 const Board = lazy(() => import('./components/Board/Board'));
+const AddTaskButton = lazy(
+  () => import('./components/AddTaskButton/AddTaskButton')
+);
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,6 +30,7 @@ const App: React.FC = () => {
     <Suspense fallback={<Loader />}>
       <Title />
       <SearchBar />
+      <AddTaskButton />
 
       {loading && <Loader />}
       {error && <p className="error">Error: {error}</p>}

@@ -1,8 +1,6 @@
 .container {
   width: 33%;
-
   border-radius: 8px;
-
   text-align: center;
 }
 
@@ -13,6 +11,5 @@
 
 .content {
   margin-top: 10px;
-
   border-radius: 6px;
 }

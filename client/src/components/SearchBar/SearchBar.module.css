@@ -7,7 +7,7 @@
   max-width: 800px;
   padding: 15px;
   border-radius: 10px;
-  background: #d0dcdc; /* Світліший фон для контрасту */
+  background: #d0dcdc;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
@@ -20,7 +20,7 @@
   box-sizing: border-box;
   outline: none;
   transition: all 0.3s ease;
-  background: #eef2f2; /* М’який білий для чистоти */
+  background: #eef2f2;
   color: #2e4444;
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
 }

@@ -1,0 +1,68 @@
+.addTaskButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin-left: 20px;
+}
+
+.addTaskButton:hover {
+  background-color: #45a049;
+}
+
+.modal {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  margin: 0 auto;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.input,
+.textarea {
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.addButton,
+.closeButton {
+  padding: 10px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.closeButton {
+  background-color: #f44336;
+}
