@@ -34,6 +34,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} user@your-server 'docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest && docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest && docker run -d --rm --name backend-container -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest && docker run -d --rm --name frontend-container -p 80:80 ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest'
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} user@your-server-ip 'docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest && docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest && docker run -d --rm --name backend-container -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest && docker run -d --rm --name frontend-container -p 80:80 ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest'
