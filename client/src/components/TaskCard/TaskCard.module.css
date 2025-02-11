@@ -7,7 +7,8 @@
   border-radius: 8px;
   background: linear-gradient(135deg, #a1b2b2, #4e7070);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  position: relative; /* Додаємо позиціонування для кнопки */
+  position: relative;
+  padding: 10px;
 }
 
 .infoContainer {
@@ -19,25 +20,68 @@
 
 .textContainer {
   flex: 1;
+  height: 100px;
   padding: 0 15px;
 }
 
 .buttonsContainer {
   display: flex;
   gap: 10px;
-  align-items: center;
-}
-
-.deleteButton {
   position: absolute;
   bottom: 5px;
   right: 5px;
+}
+
+.button {
   background-color: transparent;
   border: none;
   cursor: pointer;
   transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
 }
 
-.deleteButton:hover {
+.button:hover {
   opacity: 0.7;
+}
+.editableInput {
+  width: 100%;
+  min-height: 25px;
+  padding: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  color: #333;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+.editableTextarea {
+  width: 100%;
+  min-height: 25px;
+  padding: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  color: #333;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.editableInput:focus {
+  border-color: #4e7070;
+  background: #fff;
+  box-shadow: 0 0 5px rgba(78, 112, 112, 0.5);
+}
+
+.taskText {
+  min-height: 35px;
+  display: flex;
+  align-items: center;
 }

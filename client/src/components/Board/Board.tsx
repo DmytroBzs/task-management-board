@@ -1,8 +1,8 @@
 import React, { lazy } from 'react';
 import css from './Board.module.css';
-import TaskList from '../TaskList/TaskList';
 
 const Column = lazy(() => import('../Column/Column'));
+const TaskList = lazy(() => import('../TaskList/TaskList'));
 
 interface BoardProps {
   tasks: {
