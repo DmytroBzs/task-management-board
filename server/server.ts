@@ -2,7 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import tasksRouter from './routers/tasks';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { getEnvVar } from './utils/getEnvVar';
 import { notFoundHandler } from './middlewares/notFoundHandler';
 import { errorHandler } from './middlewares/errorHandler';
