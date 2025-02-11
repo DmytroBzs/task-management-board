@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
-  deleteTask,
   updateTask,
   fetchTasks,
+  deleteTask,
 } from '../../redux/tasks/operations';
 import { AppDispatch } from '../../redux/store';
 import { MdDeleteOutline } from 'react-icons/md';
@@ -47,6 +47,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const handleCancel = () => {
     setEditedTask({ ...task });
     setIsEditing(false);
+  };
+
+  const changeStatus = (newStatus: string) => {
+    setEditedTask(prev => ({ ...prev, status: newStatus }));
+    dispatch(updateTask({ ...editedTask, status: newStatus })).then(() => {
+      dispatch(fetchTasks());
+    });
   };
 
   return (
@@ -95,6 +102,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
               <FiEdit size={23} color="4439db" />
             </button>
           )}
+          <div className={css.statusButtons}>
+            <button onClick={() => changeStatus('ToDo')}>To Do</button>
+            <button onClick={() => changeStatus('InProgress')}>
+              In Progress
+            </button>
+            <button onClick={() => changeStatus('Done')}>Done</button>
+          </div>
           <button onClick={handleDelete} className={css.button}>
             <MdDeleteOutline size={30} color="c71f14" />
           </button>

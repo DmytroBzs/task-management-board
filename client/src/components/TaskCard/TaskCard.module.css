@@ -85,3 +85,20 @@
   display: flex;
   align-items: center;
 }
+
+.statusButtons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.statusButtons button {
+  height: 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.statusButtons button:hover {
+  background-color: #ddd;
+}
