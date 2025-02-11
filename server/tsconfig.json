@@ -5,7 +5,8 @@
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["node", "express"]
   },
   "ts-node": {
     "compilerOptions": {
