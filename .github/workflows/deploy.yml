@@ -16,18 +16,31 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      # Логін до Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      # Побудова і пуш Docker образу для бекенду
+      - name: Build and push backend Docker image
         run: |
-          docker buildx build --push -t ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest .
+          docker buildx build --push -t ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest -f ./server/Dockerfile .
 
-      - name: Deploy to server (можна змінити на вашу платформу)
+      # Побудова і пуш Docker образу для фронтенду
+      - name: Build and push frontend Docker image
         run: |
-          ssh user@your-server 'docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest && docker run -d --rm -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest'
+          docker buildx build --push -t ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest -f ./client/Dockerfile .
+
+      # Деплой на сервер (можна змінити на вашу платформу)
+      - name: Deploy to server
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} user@your-server '
+            docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest &&
+            docker pull ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest &&
+            docker run -d --rm -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/task-board-backend:latest &&
+            docker run -d --rm -p 80:80 ${{ secrets.DOCKER_USERNAME }}/task-board-frontend:latest
+          '
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
