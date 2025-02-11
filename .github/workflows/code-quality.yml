@@ -1,0 +1,49 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Backend Dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Lint Backend
+        working-directory: ./server
+        run: npm run lint
+
+      - name: Prettier Check Backend
+        working-directory: ./server
+        run: npm run prettier-check
+
+      - name: Build Backend
+        working-directory: ./server
+        run: npm run build
+
+      - name: Install Frontend Dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Lint Frontend
+        working-directory: ./client
+        run: npm run lint
+
+      - name: Prettier Check Frontend
+        working-directory: ./client
+        run: npm run prettier-check
+
+      - name: Build Frontend
+        working-directory: ./client
+        run: npm run build
