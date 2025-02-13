@@ -56,36 +56,40 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     });
   };
 
+  let editingContent;
+  if (isEditing) {
+    editingContent = (
+      <div className={css.textContainer}>
+        <input
+          type="text"
+          value={editedTask.title}
+          onChange={(e) =>
+            setEditedTask((prev) => ({ ...prev, title: e.target.value }))
+          }
+          className={css.editableInput}
+        />
+        <textarea
+          value={editedTask.description}
+          onChange={(e) =>
+            setEditedTask((prev) => ({ ...prev, description: e.target.value }))
+          }
+          className={css.editableTextarea}
+        />
+      </div>
+    );
+  } else {
+    editingContent = (
+      <div className={css.textContainer}>
+        <h4>{task.title}</h4>
+        <p>{task.description}</p>
+      </div>
+    );
+  }
+
   return (
     <div className={css.card}>
       <div className={css.infoContainer}>
-        {isEditing ? (
-          <div className={css.textContainer}>
-            <input
-              type="text"
-              value={editedTask.title}
-              onChange={(e) =>
-                setEditedTask((prev) => ({ ...prev, title: e.target.value }))
-              }
-              className={css.editableInput}
-            />
-            <textarea
-              value={editedTask.description}
-              onChange={(e) =>
-                setEditedTask((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-              className={css.editableTextarea}
-            />
-          </div>
-        ) : (
-          <div className={css.textContainer}>
-            <h4>{task.title}</h4>
-            <p>{task.description}</p>
-          </div>
-        )}
+        {editingContent}
 
         <div className={css.buttonsContainer}>
           {isEditing ? (

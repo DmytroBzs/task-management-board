@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://task-management-board-cl09.onrender.com/",
+  baseURL: import.meta.env.VITE_SERVER_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

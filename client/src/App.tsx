@@ -26,21 +26,21 @@ const App: React.FC = () => {
     return <p>No tasks available</p>;
   }
 
+  let boardContent;
+  if (foundTask) {
+    boardContent = <Board tasks={[foundTask.task]} />;
+  } else if (tasks && tasks.length > 0) {
+    boardContent = <Board tasks={tasks} />;
+  } else {
+    boardContent = <p>No tasks available</p>;
+  }
+
   return (
     <Suspense fallback={<Loader />}>
       <Title />
       <SearchBar />
       <AddTaskButton />
-
-      {loading && <Loader />}
-      {error && <p className="error">Error: {error}</p>}
-      {foundTask ? (
-        <Board tasks={[foundTask.task]} />
-      ) : tasks && tasks.length > 0 ? (
-        <Board tasks={tasks} />
-      ) : (
-        <p>No tasks available</p>
-      )}
+      {boardContent}
     </Suspense>
   );
 };

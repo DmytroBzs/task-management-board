@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Modal from "react-modal";
-import css from "./AddTaskButton.module.css";
 import { addTask } from "../../redux/tasks/operations";
 import { AppDispatch } from "../../redux/store";
+import clsx from "clsx";
+import css from "./AddTaskButton.module.css";
 
 Modal.setAppElement("#root");
 
@@ -15,23 +16,33 @@ const AddTaskButton: React.FC = () => {
     description: "",
     status: "ToDo",
   });
+  const [errors, setErrors] = useState({ title: false, description: false });
+
+  const validateFields = () => {
+    const newErrors = {
+      title: newTask.title.trim() === "",
+      description: newTask.description.trim() === "",
+    };
+    setErrors(newErrors);
+    return !newErrors.title && !newErrors.description;
+  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
     setNewTask({ title: "", description: "", status: "ToDo" });
+    setErrors({ title: false, description: false });
   };
 
   const handleAddTask = async () => {
-    if (newTask.title && newTask.description) {
-      try {
-        const action = await dispatch(addTask(newTask));
+    if (!validateFields()) return;
 
-        if (action.meta.requestStatus === "fulfilled") {
-          handleModalClose();
-        }
-      } catch (error) {
-        console.error("Failed to add task:", error);
+    try {
+      const action = await dispatch(addTask(newTask));
+      if (action.meta.requestStatus === "fulfilled") {
+        handleModalClose();
       }
+    } catch (error) {
+      console.error("Failed to add task:", error);
     }
   };
 
@@ -49,27 +60,40 @@ const AddTaskButton: React.FC = () => {
         contentLabel="Add New Task"
         className={css.modal}
         overlayClassName={css.overlay}
-        ariaHideApp={false}
       >
         <div className={css.modalContent}>
           <h3 className={css.modalTitle}>Add new task</h3>
           <input
-            className={css.input}
+            className={clsx(css.input, { [css.errorInput]: errors.title })}
             type="text"
             placeholder="Task title"
             value={newTask.title}
             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
           />
+          {errors.title && <p className={css.errorText}>Title is required</p>}
+
           <textarea
-            className={css.textarea}
+            className={clsx(css.textarea, {
+              [css.errorInput]: errors.description,
+            })}
             placeholder="Task description"
             value={newTask.description}
             onChange={(e) =>
               setNewTask({ ...newTask, description: e.target.value })
             }
           />
+          {errors.description && (
+            <p className={css.errorText}>Description is required</p>
+          )}
+
           <div className={css.buttons}>
-            <button className={css.addButton} onClick={handleAddTask}>
+            <button
+              className={clsx(css.addButton, {
+                [css.disabledButton]: errors.title || errors.description,
+              })}
+              onClick={handleAddTask}
+              disabled={errors.title || errors.description}
+            >
               Add
             </button>
             <button className={css.closeButton} onClick={handleModalClose}>
