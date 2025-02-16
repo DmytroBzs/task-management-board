@@ -1,47 +1,38 @@
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { lazy, Suspense, useEffect } from "react";
-import { fetchTasks } from "./redux/tasks/operations";
 import { AppDispatch } from "./redux/store";
-import { useTasks } from "./hooks/useTasks";
-
-const SearchBar = lazy(() => import("./components/SearchBar/SearchBar"));
-const Title = lazy(() => import("./components/TItle/Title"));
-const Loader = lazy(() => import("./components/Loader/Loader"));
-const Board = lazy(() => import("./components/Board/Board"));
-const AddTaskButton = lazy(
-  () => import("./components/AddTaskButton/AddTaskButton"),
-);
+import { fetchBoards } from "./redux/boards/operations";
+import { useBoards } from "./hooks/useBoards";
+import { AddBoardButton, Board, SearchBar, Loader } from "./components";
+import styles from "./App.module.css";
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { tasks, loading, error, foundTask } = useTasks();
+  const { boards = [], loading, error, foundBoard } = useBoards();
 
   useEffect(() => {
-    dispatch(fetchTasks());
+    dispatch(fetchBoards());
   }, [dispatch]);
 
   if (loading) return <Loader />;
-  if (error) return <p>Error: {error}</p>;
-  if (!Array.isArray(tasks)) {
-    return <p>No tasks available</p>;
-  }
+  if (error) return <p className={styles.error}>Error: {error}</p>;
 
-  let boardContent;
-  if (foundTask) {
-    boardContent = <Board tasks={[foundTask.task]} />;
-  } else if (tasks && tasks.length > 0) {
-    boardContent = <Board tasks={tasks} />;
+  let content;
+  if (foundBoard) {
+    content = <Board board={foundBoard} />;
+  } else if (Array.isArray(boards) && boards.length > 0) {
+    content = boards.map((board) => <Board key={board._id} board={board} />);
   } else {
-    boardContent = <p>No tasks available</p>;
+    content = <p className={styles.noBoards}>No boards available</p>;
   }
 
   return (
-    <Suspense fallback={<Loader />}>
-      <Title />
+    <div className={styles.app}>
+      <h1 className={styles.title}>Task Management</h1>
       <SearchBar />
-      <AddTaskButton />
-      {boardContent}
-    </Suspense>
+      <AddBoardButton />
+      <div className={styles.boardsContainer}>{content}</div>
+    </div>
   );
 };
 

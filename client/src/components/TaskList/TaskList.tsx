@@ -1,26 +1,21 @@
-import React, { lazy } from "react";
-
-const TaskCard = lazy(() => import("../TaskCard/TaskCard"));
-interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  status: string;
-}
+import React from "react";
+import { Card } from "../../types/types";
+import TaskCard from "../TaskCard/TaskCard";
+import styles from "./TaskList.module.css";
 
 interface TaskListProps {
-  tasks: Task[];
+  cards: Card[];
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
+const TaskList: React.FC<TaskListProps> = ({ cards = [] }) => {
+  const sortedCards = [...cards].sort((a, b) => a.order - b.order);
+
   return (
-    <ul>
-      {tasks.map((task) => (
-        <li key={task._id}>
-          <TaskCard task={task} />
-        </li>
+    <div className={styles.taskList}>
+      {sortedCards.map((card, index) => (
+        <TaskCard key={`${card._id}-${index}`} card={card} />
       ))}
-    </ul>
+    </div>
   );
 };
 

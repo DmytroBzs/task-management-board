@@ -1,36 +1,29 @@
-import { Formik, Form, Field } from "formik";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
-import { fetchTaskById } from "../../redux/tasks/operations";
-import css from "./SearchBar.module.css";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setSearchQuery } from "../../redux/boards/slice";
+import { FaSearch } from "react-icons/fa";
+import styles from "./SearchBar.module.css";
 
 const SearchBar: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
-  const handleSubmit = (
-    { searchInput }: { searchInput: string },
-    { resetForm }: { resetForm: () => void },
-  ) => {
-    if (!searchInput.trim()) return;
-    dispatch(fetchTaskById(searchInput));
-    resetForm();
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchQuery(e.target.value));
   };
 
   return (
-    <Formik initialValues={{ searchInput: "" }} onSubmit={handleSubmit}>
-      <Form className={css.form}>
-        <Field
-          className={css.input}
+    <div className={styles.searchContainer}>
+      <div className={styles.searchBar}>
+        <input
           type="text"
-          name="searchInput"
-          placeholder="Enter Task ID..."
+          placeholder="Search boards..."
+          onChange={handleSearch}
         />
-        <button className={css.btn} type="submit">
-          Search
+        <button className={styles.searchButton}>
+          <FaSearch />
         </button>
-      </Form>
-    </Formik>
+      </div>
+    </div>
   );
 };
 

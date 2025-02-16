@@ -1,16 +1,10 @@
 import createHttpError from "http-errors";
 import { Request, Response, NextFunction } from "express";
-
-import {
-  getAllTasks,
-  getTaskById,
-  createTask,
-  patchTask,
-  deleteTask,
-} from "../services/tasks";
+import { tasksService } from "../services/tasks";
 
 export const getTasksController = async (req: Request, res: Response) => {
-  const tasks = await getAllTasks();
+  const { boardId } = req.params;
+  const tasks = await tasksService.getAllTasks(boardId);
 
   res.status(200).json({
     status: 200,
@@ -21,7 +15,7 @@ export const getTasksController = async (req: Request, res: Response) => {
 
 export const getTaskByIdController = async (req: Request, res: Response) => {
   const { taskId } = req.params;
-  const task = await getTaskById(taskId);
+  const task = await tasksService.getTaskById(taskId);
 
   if (!task) {
     throw createHttpError(404, "Task not found");
@@ -34,7 +28,9 @@ export const getTaskByIdController = async (req: Request, res: Response) => {
 };
 
 export const createTaskController = async (req: Request, res: Response) => {
-  const task = await createTask(req.body);
+  const { boardId } = req.params;
+  const task = await tasksService.createTask({ ...req.body, boardId });
+
   res.status(201).json({
     status: 201,
     message: "Successfully created task!",
@@ -48,7 +44,7 @@ export const patchTaskController = async (
   next: NextFunction,
 ) => {
   const { taskId } = req.params;
-  const result = await patchTask(taskId, req.body);
+  const result = await tasksService.patchTask(taskId, req.body);
 
   if (!result) {
     next(createHttpError(404, "Task not found"));
@@ -68,7 +64,7 @@ export const deleteTaskController = async (
   next: NextFunction,
 ) => {
   const { taskId } = req.params;
-  const task = await deleteTask(taskId);
+  const task = await tasksService.deleteTask(taskId);
 
   if (!task) {
     next(createHttpError(404, "Task not found"));

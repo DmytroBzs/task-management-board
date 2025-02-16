@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import Modal from "react-modal";
-import { addTask } from "../../redux/tasks/operations";
+import { addCard } from "../../redux/tasks/operations";
 import { AppDispatch } from "../../redux/store";
 import clsx from "clsx";
 import css from "./AddTaskButton.module.css";
 
 Modal.setAppElement("#root");
 
-const AddTaskButton: React.FC = () => {
+interface AddTaskButtonProps {
+  boardId: string;
+}
+
+const AddTaskButton: React.FC<AddTaskButtonProps> = ({ boardId }) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
     status: "ToDo",
+    boardId,
   });
   const [errors, setErrors] = useState({ title: false, description: false });
 
@@ -29,7 +35,7 @@ const AddTaskButton: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setNewTask({ title: "", description: "", status: "ToDo" });
+    setNewTask({ title: "", description: "", status: "ToDo", boardId });
     setErrors({ title: false, description: false });
   };
 
@@ -37,12 +43,19 @@ const AddTaskButton: React.FC = () => {
     if (!validateFields()) return;
 
     try {
-      const action = await dispatch(addTask(newTask));
-      if (action.meta.requestStatus === "fulfilled") {
+      const result = await dispatch(
+        addCard({
+          ...newTask,
+          order: 0,
+          columnId: "ToDo",
+        }),
+      ).unwrap();
+
+      if (result) {
         handleModalClose();
       }
     } catch (error) {
-      console.error("Failed to add task:", error);
+      console.error("Failed to add card:", error);
     }
   };
 

@@ -1,25 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  fetchTaskById,
-  fetchTasks,
-  addTask,
-  updateTask,
-  deleteTask,
+  fetchCardById,
+  fetchCards,
+  addCard,
+  updateCard,
+  deleteCard,
 } from "./operations";
-
-interface Task {
-  task: { _id: string; title: string; description: string; status: string };
-  _id: string;
-  title: string;
-  description: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { Card } from "../../types/types";
 
 interface TasksState {
-  tasks: Task[];
-  foundTask: Task | null;
+  tasks: Card[];
+  foundTask: Card | null;
   loading: boolean;
   error: string | null;
 }
@@ -48,45 +39,47 @@ const tasksSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTasks.pending, handlePending)
-      .addCase(fetchTasks.fulfilled, (state, action: PayloadAction<Task[]>) => {
+      .addCase(fetchCards.pending, handlePending)
+      .addCase(fetchCards.fulfilled, (state, action: PayloadAction<Card[]>) => {
         state.loading = false;
         state.tasks = action.payload;
       })
-      .addCase(fetchTasks.rejected, handleRejected)
+      .addCase(fetchCards.rejected, handleRejected)
 
-      .addCase(fetchTaskById.pending, handlePending)
+      .addCase(fetchCardById.pending, handlePending)
       .addCase(
-        fetchTaskById.fulfilled,
-        (state, action: PayloadAction<Task>) => {
+        fetchCardById.fulfilled,
+        (state, action: PayloadAction<Card>) => {
           state.loading = false;
           state.foundTask = action.payload;
         },
       )
-      .addCase(fetchTaskById.rejected, handleRejected)
-      .addCase(addTask.pending, handlePending)
-      .addCase(addTask.fulfilled, (state, action: PayloadAction<Task>) => {
+      .addCase(fetchCardById.rejected, handleRejected)
+      .addCase(addCard.pending, handlePending)
+      .addCase(addCard.fulfilled, (state, action: PayloadAction<Card>) => {
         state.loading = false;
-        state.tasks.push(action.payload);
+        state.tasks.unshift(action.payload);
       })
-      .addCase(addTask.rejected, handleRejected)
-      .addCase(updateTask.pending, handlePending)
-      .addCase(updateTask.fulfilled, (state, action: PayloadAction<Task>) => {
+      .addCase(addCard.rejected, handleRejected)
+      .addCase(updateCard.pending, handlePending)
+      .addCase(updateCard.fulfilled, (state, action: PayloadAction<Card>) => {
         state.loading = false;
         const index = state.tasks.findIndex(
           (task) => task._id === action.payload._id,
         );
         if (index !== -1) {
           state.tasks[index] = action.payload;
+        } else {
+          state.tasks.push(action.payload);
         }
       })
-      .addCase(updateTask.rejected, handleRejected)
-      .addCase(deleteTask.pending, handlePending)
-      .addCase(deleteTask.fulfilled, (state, action) => {
+      .addCase(updateCard.rejected, handleRejected)
+      .addCase(deleteCard.pending, handlePending)
+      .addCase(deleteCard.fulfilled, (state, action) => {
         state.loading = false;
         state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       })
-      .addCase(deleteTask.rejected, handleRejected);
+      .addCase(deleteCard.rejected, handleRejected);
   },
 });
 

@@ -1,33 +1,39 @@
-import React, { lazy } from "react";
-import css from "./Board.module.css";
-
-const Column = lazy(() => import("../Column/Column"));
-const TaskList = lazy(() => import("../TaskList/TaskList"));
+import React from "react";
+import { Board as BoardType } from "../../types/types";
+import AddTaskButton from "../AddTaskButton/AddTaskButton";
+import TaskList from "../TaskList/TaskList";
+import DeleteBoardButton from "../DeleteBoardButton/DeleteBoardButton";
+import styles from "./Board.module.css";
 
 interface BoardProps {
-  tasks: {
-    _id: string;
-    title: string;
-    description: string;
-    status: string;
-  }[];
+  board: BoardType;
 }
 
-const Board: React.FC<BoardProps> = ({ tasks }) => {
-  const toDoTasks = tasks.filter((task) => task.status === "ToDo");
-  const inProgressTasks = tasks.filter((task) => task.status === "InProgress");
-  const doneTasks = tasks.filter((task) => task.status === "Done");
+const Board: React.FC<BoardProps> = ({ board }) => {
+  const { _id, name, columns } = board;
+
   return (
-    <div className={css.container}>
-      <Column title="To Do">
-        <TaskList tasks={toDoTasks} />
-      </Column>
-      <Column title="In Progress">
-        <TaskList tasks={inProgressTasks} />
-      </Column>
-      <Column title="Done">
-        <TaskList tasks={doneTasks} />
-      </Column>
+    <div className={styles.board}>
+      <h2 className={styles.boardTitle}>{name}</h2>
+      <div className={styles.boardButtons}>
+        <AddTaskButton boardId={_id} />
+        <DeleteBoardButton boardId={_id} />
+      </div>
+
+      <div className={styles.columns}>
+        {columns.map((column) => (
+          <div key={column.id} className={styles.column}>
+            <h3>{column.name}</h3>
+            <TaskList
+              cards={column.cards.map((card) => ({
+                ...card,
+                boardId: _id,
+                columnId: column.id,
+              }))}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

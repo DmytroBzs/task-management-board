@@ -1,59 +1,78 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  updateTask,
-  fetchTasks,
-  deleteTask,
-} from "../../redux/tasks/operations";
+import { updateCard, deleteCard } from "../../redux/tasks/operations";
 import { AppDispatch } from "../../redux/store";
-import { MdDeleteOutline } from "react-icons/md";
-import { FiEdit } from "react-icons/fi";
-import { MdSave, MdCancel } from "react-icons/md";
+import { MdDeleteOutline, MdEdit } from "react-icons/md";
 import css from "./TaskCard.module.css";
-
-interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  status: string;
-}
+import { Card } from "../../types/types";
 
 interface TaskCardProps {
-  task: Task;
+  card: Card;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ card }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTask, setEditedTask] = useState({ ...task });
+  const [editedCard, setEditedCard] = useState(card);
 
-  const handleDelete = () => {
-    dispatch(deleteTask(task._id)).then(() => {
-      dispatch(fetchTasks());
-    });
+  // Destructure boardId along with other properties
+  const { _id, title, description, boardId, columnId, order } = card;
+
+  const handleStatusChange = async (newStatus: Card["status"]) => {
+    try {
+      console.log(`Current order: ${order}`);
+      // Optimistically update the UI
+      const updatedCard = {
+        ...card,
+        status: newStatus,
+      };
+      setEditedCard(updatedCard);
+
+      await dispatch(
+        updateCard({
+          _id,
+          title,
+          description,
+          status: newStatus,
+          order,
+          boardId,
+          columnId,
+        }),
+      ).unwrap();
+    } catch (error) {
+      // Revert on error
+      setEditedCard(card);
+      console.error("Failed to update card status:", error);
+    }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSave = () => {
-    dispatch(updateTask(editedTask)).then(() => {
-      dispatch(fetchTasks());
+  const handleSave = async () => {
+    try {
+      await dispatch(
+        updateCard({
+          ...editedCard,
+          boardId, // Now boardId is defined
+          columnId,
+        }),
+      );
       setIsEditing(false);
-    });
+    } catch (error) {
+      console.error("Failed to update card:", error);
+    }
   };
 
-  const handleCancel = () => {
-    setEditedTask({ ...task });
-    setIsEditing(false);
-  };
-
-  const changeStatus = (newStatus: string) => {
-    setEditedTask((prev) => ({ ...prev, status: newStatus }));
-    dispatch(updateTask({ ...editedTask, status: newStatus })).then(() => {
-      dispatch(fetchTasks());
-    });
+  const handleDelete = async () => {
+    try {
+      await dispatch(
+        deleteCard({
+          cardId: card._id,
+          boardId: card.boardId,
+          columnId: card.columnId,
+        }),
+      ).unwrap();
+    } catch (error) {
+      console.error("Failed to delete card:", error);
+    }
   };
 
   let editingContent;
@@ -62,16 +81,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       <div className={css.textContainer}>
         <input
           type="text"
-          value={editedTask.title}
+          value={editedCard.title}
           onChange={(e) =>
-            setEditedTask((prev) => ({ ...prev, title: e.target.value }))
+            setEditedCard((prev) => ({ ...prev, title: e.target.value }))
           }
           className={css.editableInput}
         />
         <textarea
-          value={editedTask.description}
+          value={editedCard.description}
           onChange={(e) =>
-            setEditedTask((prev) => ({ ...prev, description: e.target.value }))
+            setEditedCard((prev) => ({ ...prev, description: e.target.value }))
           }
           className={css.editableTextarea}
         />
@@ -80,8 +99,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   } else {
     editingContent = (
       <div className={css.textContainer}>
-        <h4>{task.title}</h4>
-        <p>{task.description}</p>
+        <h4>{title}</h4>
+        <p>{description}</p>
       </div>
     );
   }
@@ -90,32 +109,43 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     <div className={css.card}>
       <div className={css.infoContainer}>
         {editingContent}
-
-        <div className={css.buttonsContainer}>
+        <div className={css.actionButtons}>
           {isEditing ? (
             <>
-              <button onClick={handleSave} className={css.button}>
-                <MdSave size={25} color="green" />
-              </button>
-              <button onClick={handleCancel} className={css.button}>
-                <MdCancel size={25} color="gray" />
-              </button>
+              <button onClick={handleSave}>Save</button>
+              <button onClick={() => setIsEditing(false)}>Cancel</button>
             </>
           ) : (
-            <button onClick={handleEdit} className={css.button}>
-              <FiEdit size={23} color="4439db" />
-            </button>
+            <div className={css.buttonsContainer}>
+              <button
+                className={css.editButton}
+                onClick={() => setIsEditing(true)}
+              >
+                <MdEdit size={20} color="blue" />
+              </button>
+              <button
+                onClick={() => handleStatusChange("ToDo")}
+                className={card.status === "ToDo" ? css.active : ""}
+              >
+                To Do
+              </button>
+              <button
+                onClick={() => handleStatusChange("InProgress")}
+                className={card.status === "InProgress" ? css.active : ""}
+              >
+                In Progress
+              </button>
+              <button
+                onClick={() => handleStatusChange("Done")}
+                className={card.status === "Done" ? css.active : ""}
+              >
+                Done
+              </button>
+              <button className={css.deleteButton} onClick={handleDelete}>
+                <MdDeleteOutline size={20} color="red" />
+              </button>
+            </div>
           )}
-          <div className={css.statusButtons}>
-            <button onClick={() => changeStatus("ToDo")}>To Do</button>
-            <button onClick={() => changeStatus("InProgress")}>
-              In Progress
-            </button>
-            <button onClick={() => changeStatus("Done")}>Done</button>
-          </div>
-          <button onClick={handleDelete} className={css.button}>
-            <MdDeleteOutline size={30} color="c71f14" />
-          </button>
         </div>
       </div>
     </div>

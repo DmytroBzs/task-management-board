@@ -2,15 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": ".",
     "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "./dist",
-    "types": ["node", "express"]
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "src"
   },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

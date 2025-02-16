@@ -5,10 +5,12 @@ import { ObjectSchema, ValidationError } from "joi";
 export const validateBody =
   (schema: ObjectSchema) =>
   async (req: Request, res: Response, next: NextFunction) => {
+    console.log("Received request body:", req.body);
     try {
-      await schema.validateAsync(req.body, {
+      const validatedBody = await schema.validateAsync(req.body, {
         abortEarly: false,
       });
+      req.body = validatedBody;
       next();
     } catch (err) {
       if (err instanceof ValidationError) {

@@ -1,11 +1,11 @@
 import express from "express";
 import pino from "pino-http";
 import cors from "cors";
-import tasksRouter from "./routers/tasks";
 import { Request, Response } from "express";
-import { getEnvVar } from "./utils/getEnvVar";
-import { notFoundHandler } from "./middlewares/notFoundHandler";
-import { errorHandler } from "./middlewares/errorHandler";
+import { getEnvVar } from "./src/utils/getEnvVar";
+import { notFoundHandler } from "./src/middlewares/notFoundHandler";
+import { errorHandler } from "./src/middlewares/errorHandler";
+import boardsRouter from "./src/routes/boards";
 
 const PORT = Number(getEnvVar("PORT", "3000"));
 
@@ -30,7 +30,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use(tasksRouter);
+  app.use("/boards", boardsRouter);
 
   app.use("*", notFoundHandler);
   app.use(errorHandler);

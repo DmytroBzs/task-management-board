@@ -1,79 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../api";
+import { Card } from "../../types/types";
 
-interface Task {
+interface CreateCardData {
   title: string;
-  description?: string;
-  status?: string;
+  description: string;
+  order: number;
+  boardId: string;
+  columnId: string;
 }
 
-export const fetchTasks = createAsyncThunk(
-  "tasks/fetchAll",
-  async (_, thunkAPI) => {
-    try {
-      const response = await axiosInstance.get("/tasks");
-      return response.data.data;
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        return thunkAPI.rejectWithValue(err.message);
-      } else {
-        return thunkAPI.rejectWithValue("An unknown error occcurred");
-      }
-    }
-  },
-);
-
-export const fetchTaskById = createAsyncThunk(
-  "tasks/fetchById",
-  async (taskId: string, thunkAPI) => {
-    try {
-      const response = await axiosInstance.get(`/tasks/${taskId}`);
-
-      return response.data.data;
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        return thunkAPI.rejectWithValue(err.message);
-      } else {
-        return thunkAPI.rejectWithValue("An unknown error occurred");
-      }
-    }
-  },
-);
-
-export const addTask = createAsyncThunk(
-  "tasks/addTask",
-  async ({ title, description, status }: Task, thunkAPI) => {
-    try {
-      const response = await axiosInstance.post("/tasks", {
-        title,
-        description,
-        status,
-      });
-      console.log(response.data);
-      return response.data;
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        return thunkAPI.rejectWithValue(err.message);
-      } else {
-        return thunkAPI.rejectWithValue("An unknown error occurred");
-      }
-    }
-  },
-);
-
-export const updateTask = createAsyncThunk(
-  "tasks/updateTask",
+export const fetchCards = createAsyncThunk(
+  "cards/fetchAll",
   async (
-    { _id, title, description, status }: Task & { _id: string },
+    { boardId, columnId }: { boardId: string; columnId: string },
     thunkAPI,
   ) => {
     try {
-      const response = await axiosInstance.patch(`/tasks/${_id}`, {
-        title,
-        description,
-        status,
-      });
-      return response.data;
+      const response = await axiosInstance.get(
+        `/boards/${boardId}/columns/${columnId}/cards`,
+      );
+      return response.data.data;
     } catch (err: unknown) {
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);
@@ -84,11 +31,95 @@ export const updateTask = createAsyncThunk(
   },
 );
 
-export const deleteTask = createAsyncThunk(
-  "tasks/deleteTask",
-  async (taskId: string, thunkAPI) => {
+export const fetchCardById = createAsyncThunk(
+  "cards/fetchById",
+  async (cardId: string, thunkAPI) => {
     try {
-      await axiosInstance.delete(`/tasks/${taskId}`);
+      const response = await axiosInstance.get(`/cards/${cardId}`);
+      return response.data.data;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return thunkAPI.rejectWithValue(err.message);
+      } else {
+        return thunkAPI.rejectWithValue("An unknown error occurred");
+      }
+    }
+  },
+);
+
+export const addCard = createAsyncThunk<Card, CreateCardData>(
+  "cards/addCard",
+  async (cardData, thunkAPI) => {
+    try {
+      const response = await axiosInstance.post(
+        `/boards/${cardData.boardId}/columns/${cardData.columnId}/cards`,
+        {
+          title: cardData.title,
+          description: cardData.description,
+          order: cardData.order,
+        },
+      );
+      return response.data.data;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return thunkAPI.rejectWithValue(err.message);
+      } else {
+        return thunkAPI.rejectWithValue("An unknown error occurred");
+      }
+    }
+  },
+);
+
+export const updateCard = createAsyncThunk(
+  "cards/updateCard",
+  async (
+    {
+      _id,
+      title,
+      description,
+      order,
+      status,
+      boardId,
+      columnId,
+    }: Card & { _id: string },
+    thunkAPI,
+  ) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/boards/${boardId}/columns/${columnId}/cards/${_id}`,
+        {
+          title,
+          description,
+          order,
+          status,
+        },
+      );
+      return response.data.data;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return thunkAPI.rejectWithValue(err.message);
+      } else {
+        return thunkAPI.rejectWithValue("An unknown error occurred");
+      }
+    }
+  },
+);
+
+export const deleteCard = createAsyncThunk(
+  "cards/deleteCard",
+  async (
+    {
+      cardId,
+      boardId,
+      columnId,
+    }: { cardId: string; boardId: string; columnId: string },
+    thunkAPI,
+  ) => {
+    try {
+      await axiosInstance.delete(
+        `/boards/${boardId}/columns/${columnId}/cards/${cardId}`,
+      );
+      return cardId;
     } catch (err: unknown) {
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);
