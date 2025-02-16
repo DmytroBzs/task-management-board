@@ -3,6 +3,7 @@ import { Board as BoardType } from "../../types/types";
 import AddTaskButton from "../AddTaskButton/AddTaskButton";
 import TaskList from "../TaskList/TaskList";
 import DeleteBoardButton from "../DeleteBoardButton/DeleteBoardButton";
+
 import styles from "./Board.module.css";
 
 interface BoardProps {

@@ -59,6 +59,11 @@ export const addCard = createAsyncThunk<Card, CreateCardData>(
           order: cardData.order,
         },
       );
+
+      if (Array.isArray(response.data.data)) {
+        return thunkAPI.fulfillWithValue(response.data.data);
+      }
+
       return response.data.data;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -73,15 +78,7 @@ export const addCard = createAsyncThunk<Card, CreateCardData>(
 export const updateCard = createAsyncThunk(
   "cards/updateCard",
   async (
-    {
-      _id,
-      title,
-      description,
-      order,
-      status,
-      boardId,
-      columnId,
-    }: Card & { _id: string },
+    { _id, title, description, order, status, boardId, columnId }: Card,
     thunkAPI,
   ) => {
     try {
@@ -91,10 +88,14 @@ export const updateCard = createAsyncThunk(
           title,
           description,
           order,
-          status,
+          ...(status !== undefined && { status }),
         },
       );
-      return response.data.data;
+      return {
+        ...response.data.data,
+        boardId,
+        columnId,
+      };
     } catch (err: unknown) {
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);
@@ -119,7 +120,7 @@ export const deleteCard = createAsyncThunk(
       await axiosInstance.delete(
         `/boards/${boardId}/columns/${columnId}/cards/${cardId}`,
       );
-      return cardId;
+      return { cardId, columnId, boardId };
     } catch (err: unknown) {
       if (err instanceof Error) {
         return thunkAPI.rejectWithValue(err.message);

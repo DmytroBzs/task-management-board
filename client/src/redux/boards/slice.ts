@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Board } from "../../types/types";
+import { Board, Card } from "../../types/types";
 import {
   fetchBoards,
   createBoard,
   deleteBoard as deleteBoardAction,
 } from "./operations";
+import { addCard, deleteCard, updateCard } from "../tasks/operations";
 
 interface BoardsState {
   items: Board[];
@@ -45,14 +46,11 @@ const boardsSlice = createSlice({
     },
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
-      if (action.payload) {
-        state.foundBoard =
-          state.items.find((board) =>
+      state.foundBoard = action.payload
+        ? state.items.find((board) =>
             board.name.toLowerCase().includes(action.payload.toLowerCase()),
-          ) || null;
-      } else {
-        state.foundBoard = null;
-      }
+          ) || null
+        : null;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -88,9 +86,7 @@ const boardsSlice = createSlice({
       .addCase(createBoard.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to create board";
-      });
-
-    builder
+      })
       .addCase(deleteBoardAction.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -104,7 +100,89 @@ const boardsSlice = createSlice({
       .addCase(deleteBoardAction.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to delete board";
-      });
+      })
+      .addCase(addCard.fulfilled, (state, action: PayloadAction<Card>) => {
+        const board = state.items.find(
+          (board) => board._id === action.payload.boardId,
+        );
+        if (board) {
+          const column = board.columns.find(
+            (col) => col.id === action.payload.status,
+          );
+          if (column) {
+            column.cards.push(action.payload);
+          }
+        }
+      })
+      .addCase(updateCard.fulfilled, (state, action: PayloadAction<Card>) => {
+        const { boardId, status: newColumnId, _id: cardId } = action.payload;
+        const boardIndex = state.items.findIndex(
+          (board) => board._id === boardId,
+        );
+        if (boardIndex === -1) return;
+        const board = state.items[boardIndex];
+        let prevColumnIndex = -1;
+        let newColumnIndex = -1;
+        board.columns.forEach((column, colIndex) => {
+          const cardIndex = column.cards.findIndex(
+            (card) => card._id === cardId,
+          );
+          if (cardIndex !== -1) {
+            prevColumnIndex = colIndex;
+          }
+          if (column.id === newColumnId) {
+            newColumnIndex = colIndex;
+          }
+        });
+        if (newColumnIndex === -1) return;
+        const updatedColumns = board.columns.map((column, colIndex) => {
+          if (colIndex === prevColumnIndex) {
+            return {
+              ...column,
+              cards: column.cards.filter((card) => card._id !== cardId),
+            };
+          }
+          if (colIndex === newColumnIndex) {
+            return {
+              ...column,
+              cards: [...column.cards, action.payload],
+            };
+          }
+          return column;
+        });
+        state.items = state.items.map((boardItem, index) =>
+          index === boardIndex
+            ? { ...boardItem, columns: updatedColumns }
+            : boardItem,
+        );
+      })
+      .addCase(
+        deleteCard.fulfilled,
+        (
+          state,
+          action: PayloadAction<{
+            cardId: string;
+            columnId: string;
+            boardId: string;
+          }>,
+        ) => {
+          state.items = state.items.map((board) => {
+            if (board._id !== action.payload.boardId) return board;
+            return {
+              ...board,
+              columns: board.columns.map((column) => {
+                if (column.id !== action.payload.columnId) return column;
+                return {
+                  ...column,
+                  cards: column.cards.filter(
+                    (card) => card._id !== action.payload.cardId,
+                  ),
+                };
+              }),
+            };
+          });
+        },
+      );
   },
 });
 

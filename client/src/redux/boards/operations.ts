@@ -6,7 +6,6 @@ export const fetchBoards = createAsyncThunk<Board[]>(
   "boards/fetchBoards",
   async () => {
     const response = await axiosInstance.get<ServerResponse<Board[]>>("boards");
-    console.log(response.data.data);
     return response.data.data;
   },
 );

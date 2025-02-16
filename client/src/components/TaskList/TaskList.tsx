@@ -13,7 +13,7 @@ const TaskList: React.FC<TaskListProps> = ({ cards = [] }) => {
   return (
     <div className={styles.taskList}>
       {sortedCards.map((card, index) => (
-        <TaskCard key={`${card._id}-${index}`} card={card} />
+        <TaskCard key={card._id || `card-${index}`} card={card} />
       ))}
     </div>
   );

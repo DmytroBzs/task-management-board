@@ -12,10 +12,11 @@ export interface Card {
   _id: string;
   title: string;
   description: string;
-  order: number;
   status: "ToDo" | "InProgress" | "Done";
   boardId: string;
   columnId: string;
+  order: number;
+  content?: string;
 }
 
 export interface Column {

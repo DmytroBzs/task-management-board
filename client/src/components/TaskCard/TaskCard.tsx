@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateCard, deleteCard } from "../../redux/tasks/operations";
 import { AppDispatch } from "../../redux/store";
@@ -15,13 +15,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ card }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCard, setEditedCard] = useState(card);
 
-  // Destructure boardId along with other properties
   const { _id, title, description, boardId, columnId, order } = card;
+
+  useEffect(() => {
+    setEditedCard(card);
+  }, [card]);
 
   const handleStatusChange = async (newStatus: Card["status"]) => {
     try {
-      console.log(`Current order: ${order}`);
-      // Optimistically update the UI
       const updatedCard = {
         ...card,
         status: newStatus,
@@ -40,7 +41,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ card }) => {
         }),
       ).unwrap();
     } catch (error) {
-      // Revert on error
       setEditedCard(card);
       console.error("Failed to update card status:", error);
     }
@@ -48,14 +48,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ card }) => {
 
   const handleSave = async () => {
     try {
-      await dispatch(
+      const result = await dispatch(
         updateCard({
           ...editedCard,
-          boardId, // Now boardId is defined
+          boardId,
           columnId,
         }),
-      );
-      setIsEditing(false);
+      ).unwrap();
+      if (result) {
+        setIsEditing(false);
+      }
     } catch (error) {
       console.error("Failed to update card:", error);
     }
@@ -65,9 +67,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ card }) => {
     try {
       await dispatch(
         deleteCard({
-          cardId: card._id,
-          boardId: card.boardId,
-          columnId: card.columnId,
+          cardId: _id,
+          boardId,
+          columnId,
         }),
       ).unwrap();
     } catch (error) {

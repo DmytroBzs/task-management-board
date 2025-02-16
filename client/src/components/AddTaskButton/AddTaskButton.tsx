@@ -100,13 +100,7 @@ const AddTaskButton: React.FC<AddTaskButtonProps> = ({ boardId }) => {
           )}
 
           <div className={css.buttons}>
-            <button
-              className={clsx(css.addButton, {
-                [css.disabledButton]: errors.title || errors.description,
-              })}
-              onClick={handleAddTask}
-              disabled={errors.title || errors.description}
-            >
+            <button className={clsx(css.addButton)} onClick={handleAddTask}>
               Add
             </button>
             <button className={css.closeButton} onClick={handleModalClose}>
