@@ -10,6 +10,16 @@ export const fetchBoards = createAsyncThunk<Board[]>(
   },
 );
 
+export const fetchBoardById = createAsyncThunk<Board, string>(
+  "boards/fetchBoardById",
+  async (boardId: string) => {
+    const response = await axiosInstance.get<ServerResponse<Board>>(
+      `/boards/${boardId}`,
+    );
+    return response.data.data;
+  },
+);
+
 export const createBoard = createAsyncThunk<Board, string>(
   "boards/createBoard",
   async (name: string) => {

@@ -4,6 +4,7 @@ import {
   fetchBoards,
   createBoard,
   deleteBoard as deleteBoardAction,
+  fetchBoardById,
 } from "./operations";
 import { addCard, deleteCard, updateCard } from "../tasks/operations";
 
@@ -72,6 +73,20 @@ const boardsSlice = createSlice({
       .addCase(fetchBoards.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch boards";
+      });
+
+    builder
+      .addCase(fetchBoardById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchBoardById.fulfilled, (state, action) => {
+        state.foundBoard = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchBoardById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch board";
       });
 
     builder

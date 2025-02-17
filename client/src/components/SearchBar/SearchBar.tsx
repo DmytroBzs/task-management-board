@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setSearchQuery } from "../../redux/boards/slice";
+
 import { FaSearch } from "react-icons/fa";
 import styles from "./SearchBar.module.css";
+import { AppDispatch } from "../../redux/store";
+import { fetchBoardById } from "../../redux/boards/operations";
 
 const SearchBar: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setSearchQuery(e.target.value));
+    const value = e.target.value;
+    setSearchQuery(value);
+  };
+
+  const handleButtonClick = () => {
+    if (searchQuery) {
+      dispatch(fetchBoardById(searchQuery));
+    }
   };
 
   return (
@@ -19,7 +30,7 @@ const SearchBar: React.FC = () => {
           placeholder="Search boards..."
           onChange={handleSearch}
         />
-        <button className={styles.searchButton}>
+        <button onClick={handleButtonClick} className={styles.searchButton}>
           <FaSearch />
         </button>
       </div>
