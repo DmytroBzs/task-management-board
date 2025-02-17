@@ -116,6 +116,12 @@ const boardsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to delete board";
       })
+      .addCase(addCard.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(addCard.rejected, (state) => {
+        state.loading = false;
+      })
       .addCase(addCard.fulfilled, (state, action: PayloadAction<Card>) => {
         const board = state.items.find(
           (board) => board._id === action.payload.boardId,
@@ -127,7 +133,14 @@ const boardsSlice = createSlice({
           if (column) {
             column.cards.push(action.payload);
           }
+          state.loading = false;
         }
+      })
+      .addCase(updateCard.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateCard.rejected, (state) => {
+        state.loading = false;
       })
       .addCase(updateCard.fulfilled, (state, action: PayloadAction<Card>) => {
         const { boardId, status: newColumnId, _id: cardId } = action.payload;
@@ -135,9 +148,11 @@ const boardsSlice = createSlice({
           (board) => board._id === boardId,
         );
         if (boardIndex === -1) return;
+
         const board = state.items[boardIndex];
         let prevColumnIndex = -1;
         let newColumnIndex = -1;
+
         board.columns.forEach((column, colIndex) => {
           const cardIndex = column.cards.findIndex(
             (card) => card._id === cardId,
@@ -149,7 +164,9 @@ const boardsSlice = createSlice({
             newColumnIndex = colIndex;
           }
         });
+
         if (newColumnIndex === -1) return;
+
         const updatedColumns = board.columns.map((column, colIndex) => {
           if (colIndex === prevColumnIndex) {
             return {
@@ -160,16 +177,29 @@ const boardsSlice = createSlice({
           if (colIndex === newColumnIndex) {
             return {
               ...column,
-              cards: [...column.cards, action.payload],
+              cards: [
+                ...column.cards.filter((card) => card._id !== cardId),
+                action.payload,
+              ].sort((a, b) => a.order - b.order),
             };
           }
           return column;
         });
+
         state.items = state.items.map((boardItem, index) =>
           index === boardIndex
             ? { ...boardItem, columns: updatedColumns }
             : boardItem,
         );
+
+        state.loading = false;
+      })
+
+      .addCase(deleteCard.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteCard.rejected, (state) => {
+        state.loading = false;
       })
       .addCase(
         deleteCard.fulfilled,
@@ -196,6 +226,7 @@ const boardsSlice = createSlice({
               }),
             };
           });
+          state.loading = false;
         },
       );
   },

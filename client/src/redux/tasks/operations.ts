@@ -91,6 +91,7 @@ export const updateCard = createAsyncThunk(
           ...(status !== undefined && { status }),
         },
       );
+      console.log(response.data.data);
       return {
         ...response.data.data,
         boardId,

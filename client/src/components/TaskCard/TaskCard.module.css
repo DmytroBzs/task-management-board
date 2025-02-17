@@ -13,10 +13,12 @@
   padding: 10px;
   width: 90%;
   max-width: 400px;
+  position: relative;
 }
 
 .infoContainer {
   display: flex;
+  border: 1px solid azure;
   justify-content: space-between;
   width: 100%;
   flex-direction: column;
@@ -95,44 +97,52 @@
   align-items: center;
 }
 
-.statusButtons {
+.actionButtons {
+  top: 8px;
+  right: 8px;
   display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 5px;
 }
 
-.statusButtons button {
-  height: 25px;
+/* Окремий стиль для кнопок */
+.editButton,
+.deleteButton,
+.saveButton,
+.cancelButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.editButton:hover {
+  background-color: rgba(0, 0, 255, 0.1);
+}
+
+.deleteButton:hover {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.saveButton {
+  background-color: #4caf50;
+  color: white;
+  padding: 6px 10px;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-size: 14px;
 }
 
-.statusButtons button:hover {
-  background-color: #ddd;
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 14px;
 }
-.editButton {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-.deleteButton {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
 @media (max-width: 1024px) {
   .card {
     padding: 8px;
